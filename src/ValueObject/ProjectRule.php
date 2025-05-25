@@ -97,21 +97,24 @@ readonly class ProjectRule
         $alwaysApply = ($applyMatches[1] ?? 'false') === 'true';
         
         // 确定规则类型
-        $type = $alwaysApply ? RuleType::ALWAYS : RuleType::MANUAL;
-        if (!empty($globs)) {
+        if ($alwaysApply) {
+            $type = RuleType::ALWAYS;
+        } elseif (!empty($globs)) {
             $type = RuleType::AUTO_ATTACHED;
         } elseif (!empty($description)) {
             $type = RuleType::AGENT_REQUESTED;
+        } else {
+            $type = RuleType::MANUAL;
         }
         
         // 提取引用的文件
         $referencedFiles = [];
-        preg_match_all('/@([^\s]+)/', $content, $fileMatches);
+        preg_match_all('/^@([^\s\n]+)/m', $content, $fileMatches);
         if (!empty($fileMatches[1])) {
             $referencedFiles = $fileMatches[1];
             
             // 从内容中移除文件引用部分，保留主要内容
-            $mainContent = preg_replace('/@([^\s]+)\n*/', '', $content);
+            $mainContent = preg_replace('/^@([^\s\n]+)\n*/m', '', $content);
         } else {
             $mainContent = $content;
         }
