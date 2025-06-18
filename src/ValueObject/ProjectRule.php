@@ -52,14 +52,14 @@ readonly class ProjectRule
         $mdcContent .= "---\n\n";
         
         // 添加规则内容
-        $mdcContent .= $this->content . "\n\n";
+        $mdcContent .= $this->content . "\n";
         
         // 添加引用的文件
         foreach ($this->referencedFiles as $file) {
-            $mdcContent .= "@{$file}\n\n";
+            $mdcContent .= "@{$file}\n";
         }
         
-        return $mdcContent;
+        return rtrim($mdcContent);
     }
     
     /**

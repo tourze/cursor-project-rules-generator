@@ -30,8 +30,6 @@ alwaysApply: false
 This is the rule content
 
 @example.php
-
-
 EOT;
 
         $this->assertEquals($expected, $rule->toMDC());
@@ -59,8 +57,6 @@ alwaysApply: false
 ---
 
 This is the rule content
-
-
 EOT;
 
         $this->assertEquals($expected, $rule->toMDC());
