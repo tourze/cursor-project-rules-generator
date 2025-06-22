@@ -14,7 +14,7 @@ class RuleFactory
 {
     /**
      * 创建样式规则
-     * 
+     *
      * @param string $name 规则名称
      * @param string $description 规则描述
      * @param array<string> $styleGuidelines 样式指南列表
@@ -32,7 +32,7 @@ class RuleFactory
     
     /**
      * 创建模板规则
-     * 
+     *
      * @param string $name 规则名称
      * @param string $description 规则描述
      * @param array<string> $globs 文件匹配模式
@@ -52,7 +52,7 @@ class RuleFactory
     
     /**
      * 创建工作流规则
-     * 
+     *
      * @param string $name 规则名称
      * @param string $description 规则描述
      * @param array<string> $steps 工作流步骤列表
@@ -72,7 +72,7 @@ class RuleFactory
     
     /**
      * 从数组创建规则模型
-     * 
+     *
      * @param array<string, mixed> $data 规则数据
      * @return BaseRule 规则模型
      */

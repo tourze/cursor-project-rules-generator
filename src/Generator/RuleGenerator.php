@@ -60,7 +60,7 @@ class RuleGenerator
 
     /**
      * 从ProjectRule值对象生成规则文件
-     * 
+     *
      * @param ProjectRule $rule ProjectRule值对象
      * @return string 生成的规则文件路径
      */
@@ -78,7 +78,7 @@ class RuleGenerator
 
     /**
      * 从多个规则模型生成规则文件
-     * 
+     *
      * @param array<BaseRule> $rules 规则模型数组
      * @return array<string> 生成的规则文件路径数组
      */
@@ -113,7 +113,7 @@ class RuleGenerator
 
     /**
      * 读取规则目录中的所有规则文件并转换为ProjectRule对象数组
-     * 
+     *
      * @return array<string, ProjectRule> 规则名称到规则值对象的映射
      */
     public function readAllRules(): array
