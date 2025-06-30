@@ -2,6 +2,7 @@
 
 namespace Tourze\CursorPorjectRules\Generator;
 
+use Tourze\CursorPorjectRules\Exception\RuleFileNotFoundException;
 use Tourze\CursorPorjectRules\Model\Rule\BaseRule;
 use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
 
@@ -102,7 +103,7 @@ class RuleGenerator
     public function readRule(string $rulePath): ProjectRule
     {
         if (!file_exists($rulePath)) {
-            throw new \InvalidArgumentException("规则文件不存在: {$rulePath}");
+            throw RuleFileNotFoundException::fileNotFound($rulePath);
         }
         
         $ruleContent = file_get_contents($rulePath);

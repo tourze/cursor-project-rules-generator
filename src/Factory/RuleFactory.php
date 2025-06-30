@@ -2,6 +2,7 @@
 
 namespace Tourze\CursorPorjectRules\Factory;
 
+use Tourze\CursorPorjectRules\Exception\InvalidRuleTypeException;
 use Tourze\CursorPorjectRules\Model\Rule\BaseRule;
 use Tourze\CursorPorjectRules\Model\Rule\StyleRule;
 use Tourze\CursorPorjectRules\Model\Rule\TemplateRule;
@@ -101,7 +102,7 @@ class RuleFactory
                 $data['referencedFiles'] ?? [],
                 $data['alwaysApply'] ?? false
             ),
-            default => throw new \InvalidArgumentException("未知的规则类型: {$type}")
+            default => throw InvalidRuleTypeException::unknownType($type)
         };
     }
 }

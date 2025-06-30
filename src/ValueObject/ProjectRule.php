@@ -2,6 +2,7 @@
 
 namespace Tourze\CursorPorjectRules\ValueObject;
 
+use Tourze\CursorPorjectRules\Exception\InvalidMDCFormatException;
 use Tourze\CursorPorjectRules\Model\RuleType;
 
 /**
@@ -52,11 +53,14 @@ readonly class ProjectRule
         $mdcContent .= "---\n\n";
         
         // 添加规则内容
-        $mdcContent .= $this->content . "\n";
+        $mdcContent .= $this->content;
         
         // 添加引用的文件
-        foreach ($this->referencedFiles as $file) {
-            $mdcContent .= "@{$file}\n";
+        if (!empty($this->referencedFiles)) {
+            $mdcContent .= "\n\n";
+            foreach ($this->referencedFiles as $file) {
+                $mdcContent .= "@{$file}\n";
+            }
         }
         
         return rtrim($mdcContent);
@@ -75,7 +79,7 @@ readonly class ProjectRule
         preg_match('/---\n(.*?)---\n(.*)/s', $mdcContent, $matches);
         
         if (count($matches) < 3) {
-            throw new \InvalidArgumentException('无效的MDC内容格式');
+            throw InvalidMDCFormatException::invalidFormat();
         }
         
         $metadata = $matches[1];
