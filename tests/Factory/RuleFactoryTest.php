@@ -1,16 +1,21 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\Factory;
+namespace Tourze\CursorProjectRules\Tests\Factory;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Factory\RuleFactory;
-use Tourze\CursorPorjectRules\Model\Rule\StyleRule;
-use Tourze\CursorPorjectRules\Model\Rule\TemplateRule;
-use Tourze\CursorPorjectRules\Model\Rule\WorkflowRule;
+use Tourze\CursorProjectRules\Factory\RuleFactory;
+use Tourze\CursorProjectRules\Model\Rule\StyleRule;
+use Tourze\CursorProjectRules\Model\Rule\TemplateRule;
+use Tourze\CursorProjectRules\Model\Rule\WorkflowRule;
 
-class RuleFactoryTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RuleFactory::class)]
+final class RuleFactoryTest extends TestCase
 {
-    public function test_createStyleRule_withValidData(): void
+    public function testCreateStyleRuleWithValidData(): void
     {
         $name = 'php-style';
         $description = 'PHP coding style';
@@ -25,7 +30,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals($referencedFiles, $rule->getReferencedFiles());
     }
 
-    public function test_createStyleRule_withEmptyData(): void
+    public function testCreateStyleRuleWithEmptyData(): void
     {
         $name = '';
         $description = '';
@@ -41,7 +46,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals("# 代码样式指南\n\n", $rule->getContent());
     }
 
-    public function test_createTemplateRule_withValidData(): void
+    public function testCreateTemplateRuleWithValidData(): void
     {
         $name = 'component-template';
         $description = 'Component template rules';
@@ -58,7 +63,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals($referencedFiles, $rule->getReferencedFiles());
     }
 
-    public function test_createTemplateRule_withEmptyGlobs(): void
+    public function testCreateTemplateRuleWithEmptyGlobs(): void
     {
         $name = 'empty-template';
         $description = 'Empty template rule';
@@ -72,7 +77,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals([], $rule->getReferencedFiles());
     }
 
-    public function test_createWorkflowRule_withValidData(): void
+    public function testCreateWorkflowRuleWithValidData(): void
     {
         $name = 'git-workflow';
         $description = 'Git workflow process';
@@ -89,7 +94,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals($alwaysApply, $rule->isAlwaysApply());
     }
 
-    public function test_createWorkflowRule_withAlwaysApply(): void
+    public function testCreateWorkflowRuleWithAlwaysApply(): void
     {
         $name = 'mandatory-workflow';
         $description = 'Mandatory workflow';
@@ -102,14 +107,14 @@ class RuleFactoryTest extends TestCase
         $this->assertTrue($rule->isAlwaysApply());
     }
 
-    public function test_createFromArray_styleType(): void
+    public function testCreateFromArrayStyleType(): void
     {
         $data = [
             'type' => 'style',
             'name' => 'test-style',
             'description' => 'Test style rule',
             'guidelines' => ['Guideline 1', 'Guideline 2'],
-            'referencedFiles' => ['file1.md']
+            'referencedFiles' => ['file1.md'],
         ];
 
         $rule = RuleFactory::createFromArray($data);
@@ -120,7 +125,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals(['file1.md'], $rule->getReferencedFiles());
     }
 
-    public function test_createFromArray_templateType(): void
+    public function testCreateFromArrayTemplateType(): void
     {
         $data = [
             'type' => 'template',
@@ -128,7 +133,7 @@ class RuleFactoryTest extends TestCase
             'description' => 'Test template rule',
             'globs' => ['*.js', '*.ts'],
             'guidelines' => ['Use ES6'],
-            'referencedFiles' => ['template.js']
+            'referencedFiles' => ['template.js'],
         ];
 
         $rule = RuleFactory::createFromArray($data);
@@ -140,7 +145,7 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals(['template.js'], $rule->getReferencedFiles());
     }
 
-    public function test_createFromArray_workflowType(): void
+    public function testCreateFromArrayWorkflowType(): void
     {
         $data = [
             'type' => 'workflow',
@@ -148,7 +153,7 @@ class RuleFactoryTest extends TestCase
             'description' => 'Test workflow rule',
             'steps' => ['Step 1', 'Step 2'],
             'referencedFiles' => ['workflow.md'],
-            'alwaysApply' => true
+            'alwaysApply' => true,
         ];
 
         $rule = RuleFactory::createFromArray($data);
@@ -160,11 +165,11 @@ class RuleFactoryTest extends TestCase
         $this->assertTrue($rule->isAlwaysApply());
     }
 
-    public function test_createFromArray_unknownType(): void
+    public function testCreateFromArrayUnknownType(): void
     {
         $data = [
             'type' => 'unknown',
-            'name' => 'test-unknown'
+            'name' => 'test-unknown',
         ];
 
         $this->expectException(\InvalidArgumentException::class);
@@ -173,10 +178,10 @@ class RuleFactoryTest extends TestCase
         RuleFactory::createFromArray($data);
     }
 
-    public function test_createFromArray_missingData(): void
+    public function testCreateFromArrayMissingData(): void
     {
         $data = [
-            'type' => 'style'
+            'type' => 'style',
             // 缺少name、description等数据
         ];
 
@@ -187,4 +192,4 @@ class RuleFactoryTest extends TestCase
         $this->assertEquals('Style rule', $rule->getDescription());
         $this->assertEquals([], $rule->getReferencedFiles());
     }
-} 
+}

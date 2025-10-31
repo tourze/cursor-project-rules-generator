@@ -1,12 +1,17 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\ValueObject;
+namespace Tourze\CursorProjectRules\Tests\ValueObject;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Model\RuleType;
-use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
+use Tourze\CursorProjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\ValueObject\ProjectRule;
 
-class ProjectRuleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(ProjectRule::class)]
+final class ProjectRuleTest extends TestCase
 {
     public function testToMDC(): void
     {
@@ -20,17 +25,17 @@ class ProjectRuleTest extends TestCase
             ['example.php']
         );
 
-        $expected = <<<EOT
----
-description: Test rule description
-globs: 
-alwaysApply: false
----
+        $expected = <<<'EOT'
+            ---
+            description: Test rule description
+            globs: 
+            alwaysApply: false
+            ---
 
-This is the rule content
+            This is the rule content
 
-@example.php
-EOT;
+            @example.php
+            EOT;
 
         $this->assertEquals($expected, $rule->toMDC());
     }
@@ -47,35 +52,35 @@ EOT;
             []
         );
 
-        $expected = <<<EOT
----
-description: Test rule description
-globs: 
-  - *.php
-  - src/*.ts
-alwaysApply: false
----
+        $expected = <<<'EOT'
+            ---
+            description: Test rule description
+            globs: 
+              - *.php
+              - src/*.ts
+            alwaysApply: false
+            ---
 
-This is the rule content
-EOT;
+            This is the rule content
+            EOT;
 
         $this->assertEquals($expected, $rule->toMDC());
     }
 
     public function testFromMDC(): void
     {
-        $mdcContent = <<<EOT
----
-description: Test rule description
-globs: 
-alwaysApply: false
----
+        $mdcContent = <<<'EOT'
+            ---
+            description: Test rule description
+            globs: 
+            alwaysApply: false
+            ---
 
-This is the rule content
+            This is the rule content
 
-@example.php
+            @example.php
 
-EOT;
+            EOT;
 
         $rule = ProjectRule::fromMDC('test-rule', $mdcContent);
 
@@ -90,18 +95,18 @@ EOT;
 
     public function testFromMDCWithGlobs(): void
     {
-        $mdcContent = <<<EOT
----
-description: Test rule description
-globs: 
-  - *.php
-  - src/*.ts
-alwaysApply: false
----
+        $mdcContent = <<<'EOT'
+            ---
+            description: Test rule description
+            globs: 
+              - *.php
+              - src/*.ts
+            alwaysApply: false
+            ---
 
-This is the rule content
+            This is the rule content
 
-EOT;
+            EOT;
 
         $rule = ProjectRule::fromMDC('test-rule', $mdcContent);
 
@@ -116,16 +121,16 @@ EOT;
 
     public function testFromMDCWithAlwaysApply(): void
     {
-        $mdcContent = <<<EOT
----
-description: Test rule description
-globs: 
-alwaysApply: true
----
+        $mdcContent = <<<'EOT'
+            ---
+            description: Test rule description
+            globs: 
+            alwaysApply: true
+            ---
 
-This is the rule content
+            This is the rule content
 
-EOT;
+            EOT;
 
         $rule = ProjectRule::fromMDC('test-rule', $mdcContent);
 
@@ -146,7 +151,7 @@ EOT;
         ProjectRule::fromMDC('test-rule', 'Invalid MDC content');
     }
 
-    public function test_constructor_withAllParameters(): void
+    public function testConstructorWithAllParameters(): void
     {
         $rule = new ProjectRule(
             'test-rule',
@@ -167,7 +172,7 @@ EOT;
         $this->assertEquals(['file1.md', 'file2.php'], $rule->referencedFiles);
     }
 
-    public function test_readonly_properties(): void
+    public function testReadonlyProperties(): void
     {
         $rule = new ProjectRule(
             'readonly-test',
@@ -185,7 +190,7 @@ EOT;
         $this->assertEquals([], $rule->referencedFiles);
     }
 
-    public function test_toMDC_withMultipleReferencedFiles(): void
+    public function testToMDCWithMultipleReferencedFiles(): void
     {
         $rule = new ProjectRule(
             'multi-ref-rule',
@@ -204,35 +209,35 @@ EOT;
         $this->assertStringContainsString('@file3.js', $mdcContent);
     }
 
-    public function test_fromMDC_complexContent(): void
+    public function testFromMDCComplexContent(): void
     {
-        $mdcContent = <<<EOT
----
-description: Complex rule with various elements
-globs: 
-  - *.php
-  - src/**/*.ts
-  - tests/**/*.php
-alwaysApply: true
----
+        $mdcContent = <<<'EOT'
+            ---
+            description: Complex rule with various elements
+            globs: 
+              - *.php
+              - src/**/*.ts
+              - tests/**/*.php
+            alwaysApply: true
+            ---
 
-# Complex Rule
+            # Complex Rule
 
-This is a complex rule with:
-- Multiple lines
-- Special characters: @#$%^&*()
-- Unicode characters: 中文字符
-- Code blocks
+            This is a complex rule with:
+            - Multiple lines
+            - Special characters: @#$%^&*()
+            - Unicode characters: 中文字符
+            - Code blocks
 
-```php
-<?php
-echo "Hello, World!";
-```
+            ```php
+            <?php
+            echo "Hello, World!";
+            ```
 
-@complex-example.php
-@documentation.md
+            @complex-example.php
+            @documentation.md
 
-EOT;
+            EOT;
 
         $rule = ProjectRule::fromMDC('complex-rule', $mdcContent);
 

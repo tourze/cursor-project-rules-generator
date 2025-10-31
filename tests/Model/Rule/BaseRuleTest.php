@@ -1,15 +1,20 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\Model\Rule;
+namespace Tourze\CursorProjectRules\Tests\Model\Rule;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Model\Rule\BaseRule;
-use Tourze\CursorPorjectRules\Model\RuleType;
-use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
+use Tourze\CursorProjectRules\Model\Rule\BaseRule;
+use Tourze\CursorProjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\ValueObject\ProjectRule;
 
-class BaseRuleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(BaseRule::class)]
+final class BaseRuleTest extends TestCase
 {
-    public function test_toProjectRule_conversion(): void
+    public function testToProjectRuleConversion(): void
     {
         $rule = new ConcreteRule(
             'test-rule',
@@ -32,7 +37,7 @@ class BaseRuleTest extends TestCase
         $this->assertEquals(['ref.md'], $projectRule->referencedFiles);
     }
 
-    public function test_isAlwaysApply_alwaysType(): void
+    public function testIsAlwaysApplyAlwaysType(): void
     {
         $rule = new ConcreteRule(
             'always-rule',
@@ -45,7 +50,7 @@ class BaseRuleTest extends TestCase
         $this->assertTrue($rule->isAlwaysApply());
     }
 
-    public function test_isAlwaysApply_otherTypes(): void
+    public function testIsAlwaysApplyOtherTypes(): void
     {
         $types = [RuleType::MANUAL, RuleType::AGENT_REQUESTED, RuleType::AUTO_ATTACHED];
 
@@ -62,49 +67,3 @@ class BaseRuleTest extends TestCase
         }
     }
 }
-
-/**
- * 用于测试BaseRule的具体实现类
- */
-class ConcreteRule extends BaseRule
-{
-    public function __construct(
-        private string $name,
-        private string $description,
-        private RuleType $type,
-        private array $globs = [],
-        private string $content = '',
-        private array $referencedFiles = []
-    ) {
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getType(): RuleType
-    {
-        return $this->type;
-    }
-
-    public function getGlobs(): array
-    {
-        return $this->globs;
-    }
-
-    public function getContent(): string
-    {
-        return $this->content;
-    }
-
-    public function getReferencedFiles(): array
-    {
-        return $this->referencedFiles;
-    }
-} 

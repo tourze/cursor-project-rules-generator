@@ -1,10 +1,10 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Generator;
+namespace Tourze\CursorProjectRules\Generator;
 
-use Tourze\CursorPorjectRules\Exception\RuleFileNotFoundException;
-use Tourze\CursorPorjectRules\Model\Rule\BaseRule;
-use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
+use Tourze\CursorProjectRules\Exception\RuleFileNotFoundException;
+use Tourze\CursorProjectRules\Model\Rule\BaseRule;
+use Tourze\CursorProjectRules\ValueObject\ProjectRule;
 
 /**
  * Cursor规则生成器
@@ -17,12 +17,12 @@ class RuleGenerator
     private const DEFAULT_RULES_DIR = '.cursor/rules';
 
     /**
-     * @param string $baseDir 项目基础目录
+     * @param string $baseDir  项目基础目录
      * @param string $rulesDir 规则目录 (相对于baseDir)
      */
     public function __construct(
         private string $baseDir,
-        private string $rulesDir = self::DEFAULT_RULES_DIR
+        private string $rulesDir = self::DEFAULT_RULES_DIR,
     ) {
     }
 
@@ -44,7 +44,7 @@ class RuleGenerator
         $rulesPath = $this->getRulesPath();
 
         if (!is_dir($rulesPath)) {
-            mkdir($rulesPath, 0755, true);
+            mkdir($rulesPath, 0o755, true);
         }
     }
 
@@ -52,6 +52,7 @@ class RuleGenerator
      * 从规则模型生成规则文件
      *
      * @param BaseRule $rule 规则模型
+     *
      * @return string 生成的规则文件路径
      */
     public function generateFromRule(BaseRule $rule): string
@@ -63,17 +64,18 @@ class RuleGenerator
      * 从ProjectRule值对象生成规则文件
      *
      * @param ProjectRule $rule ProjectRule值对象
+     *
      * @return string 生成的规则文件路径
      */
     public function generate(ProjectRule $rule): string
     {
         $this->ensureRulesDirExists();
-        
+
         $rulePath = $this->getRulesPath() . '/' . $rule->name . '.mdc';
         $ruleContent = $rule->toMDC();
-        
+
         file_put_contents($rulePath, $ruleContent);
-        
+
         return $rulePath;
     }
 
@@ -81,6 +83,7 @@ class RuleGenerator
      * 从多个规则模型生成规则文件
      *
      * @param array<BaseRule> $rules 规则模型数组
+     *
      * @return array<string> 生成的规则文件路径数组
      */
     public function generateMultiple(array $rules): array
@@ -98,6 +101,7 @@ class RuleGenerator
      * 读取规则文件内容并转换为ProjectRule对象
      *
      * @param string $rulePath 规则文件路径
+     *
      * @return ProjectRule 规则值对象
      */
     public function readRule(string $rulePath): ProjectRule
@@ -105,10 +109,14 @@ class RuleGenerator
         if (!file_exists($rulePath)) {
             throw RuleFileNotFoundException::fileNotFound($rulePath);
         }
-        
+
         $ruleContent = file_get_contents($rulePath);
+        if (false === $ruleContent) {
+            throw RuleFileNotFoundException::fileNotFound($rulePath);
+        }
+
         $ruleName = pathinfo($rulePath, PATHINFO_FILENAME);
-        
+
         return ProjectRule::fromMDC($ruleName, $ruleContent);
     }
 
@@ -120,19 +128,22 @@ class RuleGenerator
     public function readAllRules(): array
     {
         $rulesPath = $this->getRulesPath();
-        
+
         if (!is_dir($rulesPath)) {
             return [];
         }
-        
+
         $rules = [];
         $mdcFiles = glob($rulesPath . '/*.mdc');
-        
+        if (false === $mdcFiles) {
+            return [];
+        }
+
         foreach ($mdcFiles as $mdcFile) {
             $ruleName = pathinfo($mdcFile, PATHINFO_FILENAME);
             $rules[$ruleName] = $this->readRule($mdcFile);
         }
-        
+
         return $rules;
     }
 }

@@ -1,31 +1,43 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\Model;
+namespace Tourze\CursorProjectRules\Tests\Model;
 
-use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Model\RuleType;
+use PHPUnit\Framework\Attributes\CoversClass;
+use Tourze\CursorProjectRules\Model\RuleType;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class RuleTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(RuleType::class)]
+final class RuleTypeTest extends AbstractEnumTestCase
 {
-    public function test_enumValues_correct(): void
+    public function testToArray(): void
     {
-        $this->assertEquals('always', RuleType::ALWAYS->value);
-        $this->assertEquals('auto_attached', RuleType::AUTO_ATTACHED->value);
-        $this->assertEquals('agent_requested', RuleType::AGENT_REQUESTED->value);
-        $this->assertEquals('manual', RuleType::MANUAL->value);
+        $ruleType = RuleType::ALWAYS;
+        $array = $ruleType->toArray();
+
+        $this->assertArrayHasKey('value', $array);
+        $this->assertArrayHasKey('label', $array);
+        $this->assertEquals('always', $array['value']);
+        $this->assertEquals('始终包含', $array['label']);
+        $this->assertCount(2, $array, '数组应该只包含value和label两个键');
     }
 
-    public function test_enumCases_complete(): void
+    public function testGenOptions(): void
     {
-        $cases = RuleType::cases();
-        
-        $this->assertCount(4, $cases);
-        
-        $values = array_map(fn(RuleType $case) => $case->value, $cases);
-        
-        $this->assertContains('always', $values);
-        $this->assertContains('auto_attached', $values);
-        $this->assertContains('agent_requested', $values);
-        $this->assertContains('manual', $values);
+        $options = RuleType::genOptions();
+
+        $this->assertCount(4, $options);
+
+        foreach ($options as $option) {
+            $this->assertArrayHasKey('value', $option);
+            $this->assertArrayHasKey('label', $option);
+            $this->assertIsString($option['value']);
+            $this->assertIsString($option['label']);
+        }
+
+        $this->assertEquals('always', $options[0]['value']);
+        $this->assertEquals('始终包含', $options[0]['label']);
     }
-} 
+}

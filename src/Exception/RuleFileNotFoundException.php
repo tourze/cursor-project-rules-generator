@@ -1,6 +1,6 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Exception;
+namespace Tourze\CursorProjectRules\Exception;
 
 final class RuleFileNotFoundException extends \InvalidArgumentException
 {

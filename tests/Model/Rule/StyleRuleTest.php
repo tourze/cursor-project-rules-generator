@@ -1,14 +1,19 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\Model\Rule;
+namespace Tourze\CursorProjectRules\Tests\Model\Rule;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Model\Rule\StyleRule;
-use Tourze\CursorPorjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\Model\Rule\StyleRule;
+use Tourze\CursorProjectRules\Model\RuleType;
 
-class StyleRuleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(StyleRule::class)]
+final class StyleRuleTest extends TestCase
 {
-    public function test_constructor_withValidData(): void
+    public function testConstructorWithValidData(): void
     {
         $name = 'php-style';
         $description = 'PHP coding style';
@@ -20,28 +25,28 @@ class StyleRuleTest extends TestCase
         $this->assertInstanceOf(StyleRule::class, $rule);
     }
 
-    public function test_getName_correct(): void
+    public function testGetNameCorrect(): void
     {
         $rule = new StyleRule('test-name', 'description', []);
 
         $this->assertEquals('test-name', $rule->getName());
     }
 
-    public function test_getDescription_correct(): void
+    public function testGetDescriptionCorrect(): void
     {
         $rule = new StyleRule('name', 'test-description', []);
 
         $this->assertEquals('test-description', $rule->getDescription());
     }
 
-    public function test_getType_agentRequested(): void
+    public function testGetTypeAgentRequested(): void
     {
         $rule = new StyleRule('name', 'description', []);
 
         $this->assertEquals(RuleType::AGENT_REQUESTED, $rule->getType());
     }
 
-    public function test_getContent_withGuidelines(): void
+    public function testGetContentWithGuidelines(): void
     {
         $guidelines = ['Use PSR-12', 'Use strong types', 'Add return types'];
         $rule = new StyleRule('name', 'description', $guidelines);
@@ -54,7 +59,7 @@ class StyleRuleTest extends TestCase
         $this->assertStringContainsString('- Add return types', $content);
     }
 
-    public function test_getContent_emptyGuidelines(): void
+    public function testGetContentEmptyGuidelines(): void
     {
         $rule = new StyleRule('name', 'description', []);
 
@@ -63,7 +68,7 @@ class StyleRuleTest extends TestCase
         $this->assertEquals("# 代码样式指南\n\n", $content);
     }
 
-    public function test_getReferencedFiles_correct(): void
+    public function testGetReferencedFilesCorrect(): void
     {
         $referencedFiles = ['style-guide.md', 'examples.php'];
         $rule = new StyleRule('name', 'description', [], $referencedFiles);
@@ -71,10 +76,10 @@ class StyleRuleTest extends TestCase
         $this->assertEquals($referencedFiles, $rule->getReferencedFiles());
     }
 
-    public function test_getGlobs_empty(): void
+    public function testGetGlobsEmpty(): void
     {
         $rule = new StyleRule('name', 'description', []);
 
         $this->assertEquals([], $rule->getGlobs());
     }
-} 
+}

@@ -1,5 +1,7 @@
 # Cursor Project Rules Generator
 
+[English](README.md) | [中文](README.zh-CN.md)
+
 这个PHP库提供了用于创建和管理Cursor项目规则的工具，让你能够以编程方式生成`.cursor/rules`目录中的MDC格式规则文件。
 
 ## 安装
@@ -16,6 +18,32 @@ composer require tourze/cursor-project-rules-generator
 - 包含规则读取和写入功能
 - 支持引用外部文件
 
+## Quick Start
+
+```php
+<?php
+
+use Tourze\CursorProjectRules\Factory\RuleFactory;
+use Tourze\CursorProjectRules\Generator\RuleGenerator;
+
+// 创建规则生成器
+$generator = new RuleGenerator('/path/to/your/project');
+
+// 创建一个简单的样式规则
+$styleRule = RuleFactory::createStyleRule(
+    'php-style',
+    'PHP代码样式指南',
+    [
+        '使用PSR-12代码风格',
+        '使用强类型声明',
+        '优先使用命名空间导入',
+    ]
+);
+
+// 生成规则文件
+$generator->generateFromRule($styleRule);
+```
+
 ## 基本用法
 
 ### 创建和生成规则
@@ -23,8 +51,8 @@ composer require tourze/cursor-project-rules-generator
 ```php
 <?php
 
-use Tourze\CursorPorjectRules\Factory\RuleFactory;
-use Tourze\CursorPorjectRules\Generator\RuleGenerator;
+use Tourze\CursorProjectRules\Factory\RuleFactory;
+use Tourze\CursorProjectRules\Generator\RuleGenerator;
 
 // 创建样式规则
 $styleRule = RuleFactory::createStyleRule(
@@ -79,7 +107,7 @@ $generator->generateMultiple([$styleRule, $templateRule, $workflowRule]);
 ```php
 <?php
 
-use Tourze\CursorPorjectRules\Generator\RuleGenerator;
+use Tourze\CursorProjectRules\Generator\RuleGenerator;
 
 $generator = new RuleGenerator('/path/to/your/project');
 
@@ -95,8 +123,8 @@ $allRules = $generator->readAllRules();
 ```php
 <?php
 
-use Tourze\CursorPorjectRules\Model\RuleType;
-use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
+use Tourze\CursorProjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\ValueObject\ProjectRule;
 
 // 创建规则值对象
 $rule = new ProjectRule(

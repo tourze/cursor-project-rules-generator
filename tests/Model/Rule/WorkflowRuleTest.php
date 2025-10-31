@@ -1,14 +1,19 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Tests\Model\Rule;
+namespace Tourze\CursorProjectRules\Tests\Model\Rule;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Tourze\CursorPorjectRules\Model\Rule\WorkflowRule;
-use Tourze\CursorPorjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\Model\Rule\WorkflowRule;
+use Tourze\CursorProjectRules\Model\RuleType;
 
-class WorkflowRuleTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(WorkflowRule::class)]
+final class WorkflowRuleTest extends TestCase
 {
-    public function test_constructor_withValidData(): void
+    public function testConstructorWithValidData(): void
     {
         $name = 'git-workflow';
         $description = 'Git workflow process';
@@ -21,35 +26,35 @@ class WorkflowRuleTest extends TestCase
         $this->assertInstanceOf(WorkflowRule::class, $rule);
     }
 
-    public function test_getName_correct(): void
+    public function testGetNameCorrect(): void
     {
         $rule = new WorkflowRule('test-name', 'description', []);
 
         $this->assertEquals('test-name', $rule->getName());
     }
 
-    public function test_getDescription_correct(): void
+    public function testGetDescriptionCorrect(): void
     {
         $rule = new WorkflowRule('name', 'test-description', []);
 
         $this->assertEquals('test-description', $rule->getDescription());
     }
 
-    public function test_getType_alwaysApplyTrue(): void
+    public function testGetTypeAlwaysApplyTrue(): void
     {
         $rule = new WorkflowRule('name', 'description', [], [], true);
 
         $this->assertEquals(RuleType::ALWAYS, $rule->getType());
     }
 
-    public function test_getType_alwaysApplyFalse(): void
+    public function testGetTypeAlwaysApplyFalse(): void
     {
         $rule = new WorkflowRule('name', 'description', [], [], false);
 
         $this->assertEquals(RuleType::MANUAL, $rule->getType());
     }
 
-    public function test_isAlwaysApply_correct(): void
+    public function testIsAlwaysApplyCorrect(): void
     {
         $alwaysApplyTrue = new WorkflowRule('name', 'description', [], [], true);
         $alwaysApplyFalse = new WorkflowRule('name', 'description', [], [], false);
@@ -58,7 +63,7 @@ class WorkflowRuleTest extends TestCase
         $this->assertFalse($alwaysApplyFalse->isAlwaysApply());
     }
 
-    public function test_getContent_withSteps(): void
+    public function testGetContentWithSteps(): void
     {
         $steps = ['Create feature branch', 'Implement changes', 'Write tests', 'Create pull request'];
         $rule = new WorkflowRule('name', 'description', $steps);
@@ -72,7 +77,7 @@ class WorkflowRuleTest extends TestCase
         $this->assertStringContainsString('4. Create pull request', $content);
     }
 
-    public function test_getContent_emptySteps(): void
+    public function testGetContentEmptySteps(): void
     {
         $rule = new WorkflowRule('name', 'description', []);
 
@@ -81,11 +86,11 @@ class WorkflowRuleTest extends TestCase
         $this->assertEquals("# 工作流指南\n\n", $content);
     }
 
-    public function test_getReferencedFiles_correct(): void
+    public function testGetReferencedFilesCorrect(): void
     {
         $referencedFiles = ['workflow.md', 'process.md'];
         $rule = new WorkflowRule('name', 'description', [], $referencedFiles);
 
         $this->assertEquals($referencedFiles, $rule->getReferencedFiles());
     }
-} 
+}

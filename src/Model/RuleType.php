@@ -1,6 +1,6 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Model;
+namespace Tourze\CursorProjectRules\Model;
 
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\ItemTrait;

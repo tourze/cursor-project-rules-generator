@@ -1,9 +1,9 @@
 <?php
 
-namespace Tourze\CursorPorjectRules\Model\Rule;
+namespace Tourze\CursorProjectRules\Model\Rule;
 
-use Tourze\CursorPorjectRules\Model\RuleType;
-use Tourze\CursorPorjectRules\ValueObject\ProjectRule;
+use Tourze\CursorProjectRules\Model\RuleType;
+use Tourze\CursorProjectRules\ValueObject\ProjectRule;
 
 /**
  * 所有具体规则模型的基类
@@ -48,7 +48,7 @@ abstract class BaseRule
      */
     public function isAlwaysApply(): bool
     {
-        return $this->getType() === RuleType::ALWAYS;
+        return RuleType::ALWAYS === $this->getType();
     }
 
     /**
